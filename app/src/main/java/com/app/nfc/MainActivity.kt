@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.app.nfc.databinding.ActivityMainBinding
+import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,7 +29,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
          binding.textView.text =
             "Place the back of the phone over a NFC tag to read message from NFC tag"
-
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         if (nfcAdapter == null) {
             // Stop here, we definitely need NFC
@@ -91,7 +91,40 @@ class MainActivity : AppCompatActivity() {
             Log.e("data",isoDep.toString())
             // Read and process the bank card data using EMV standards.
             // This part may be specific to your bank card.
+            try {
+                // Send SELECT command to the card to choose the application
+                val selectAidCommand = byteArrayOf(
+                    0x00.toByte(), 0xA4.toByte(), 0x04.toByte(), 0x00.toByte(), 0x07.toByte(),
+                    0xA0.toByte(), 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x04.toByte(), 0x10.toByte(), 0x10.toByte()
+                )
+                val response = isoDep.transceive(selectAidCommand)
 
+                // Check the response for success and continue with EMV commands
+                if (response[response.size - 2] == 0x90.toByte() && response[response.size - 1] == 0x00.toByte()) {
+                    // Continue sending EMV commands as needed
+                    // For example, you can send GET DATA or READ RECORD commands.
+
+                    // Example of reading cardholder name (tag 5A)
+                    val getCardholderNameCommand = byteArrayOf(0x80.toByte(), 0xCA.toByte(),
+                        0x9F.toByte(), 0x46.toByte(), 0x00.toByte())
+                    val nameResponse = isoDep.transceive(getCardholderNameCommand)
+
+                    // Process the response to extract and interpret data
+                    val cardholderName = String(nameResponse, Charsets.UTF_8)
+                    Log.e("Name",cardholderName)
+                    binding.textView.text=cardholderName
+                    // Handle and display the cardholder name
+                    // ...
+
+                } else {
+                    // Card selection failed
+                    // Handle the error
+                }
+            } catch (e: IOException) {
+                // Handle communication errors
+            } finally {
+                isoDep.close()
+            }
             isoDep.close()
         }
     }
