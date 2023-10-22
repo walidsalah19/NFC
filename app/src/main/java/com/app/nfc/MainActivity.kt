@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nfcAdapter: NfcAdapter
     private lateinit var pendingIntent: PendingIntent
     var myTag: Tag? = null
-    val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_ONE_SHOT
+    val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_IMMUTABLE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-/*    override fun onNewIntent(intent: Intent) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleNfcIntent(intent)
     }
@@ -70,9 +70,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }*/
+    }
 
-    override fun onNewIntent(intent: Intent) {
+  /*  override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         Log.e("tag","tag1")
         processNfcTag(intent)
@@ -121,13 +121,13 @@ class MainActivity : AppCompatActivity() {
                     // Handle the error
                 }
             } catch (e: IOException) {
-                // Handle communication errors
+               Log.e("error",e.toString())
             } finally {
                 isoDep.close()
             }
             isoDep.close()
         }
-    }
+    }*/
     override fun onResume() {
         super.onResume()
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null)
