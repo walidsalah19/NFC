@@ -2,6 +2,7 @@ package com.app.nfc
 
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.IntentFilter
 import android.nfc.NdefMessage
 import android.nfc.NfcAdapter
 import android.nfc.Tag
@@ -130,7 +131,11 @@ class MainActivity : AppCompatActivity() {
     }*/
     override fun onResume() {
         super.onResume()
-        nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null)
+      val intent = Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+      val pendingIntent = PendingIntent.getActivity(this, 0, intent, flags)
+      val intentFilters = arrayOf<IntentFilter>()
+      val techLists =  arrayOf<String>()
+      nfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFilters, arrayOf(techLists))
     }
 
     override fun onPause() {
