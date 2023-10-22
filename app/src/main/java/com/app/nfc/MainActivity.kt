@@ -1,11 +1,15 @@
 package com.app.nfc
 
 import android.app.PendingIntent
+import android.content.Intent
+import android.nfc.NdefMessage
 import android.nfc.NfcAdapter
 import android.nfc.Tag
+import android.nfc.tech.IsoDep
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.app.nfc.databinding.ActivityMainBinding
@@ -22,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_main)
-        /* binding.textView.text =
+         binding.textView.text =
             "Place the back of the phone over a NFC tag to read message from NFC tag"
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
@@ -39,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    override fun onNewIntent(intent: Intent) {
+/*    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleNfcIntent(intent)
     }
@@ -66,9 +70,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
+    }*/
 
-   *//* override fun onNewIntent(intent: Intent) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         Log.e("tag","tag1")
         processNfcTag(intent)
@@ -90,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
             isoDep.close()
         }
-    }*//*
+    }
     override fun onResume() {
         super.onResume()
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null)
@@ -100,23 +104,5 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         nfcAdapter.disableForegroundDispatch(this)
     }
-*/
-        var i = 0;
-        binding.textView.setOnClickListener(View.OnClickListener {
-            Log.e("tag","tag")
 
-            if (i == 0) {
-                changeFragment(CorrectFragment())
-                i++
-            } else {
-                changeFragment(ErrorFragment())
-                i = 0
-            }
-        })
-    }
-
-    private fun changeFragment(fragment: Fragment) {
-        Log.e("tag","tag")
-        supportFragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit()
-    }
 }
